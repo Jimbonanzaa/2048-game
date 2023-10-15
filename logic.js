@@ -6,6 +6,8 @@ let columns = 4;
 let is2048Exist = false;
 let is4096Exist = false;
 let is8192Exist = false;
+let startX = 0;
+let startY = 0;
 
 // Create function to set the gameboard
 function setGame() {
@@ -415,3 +417,60 @@ function restartGame() {
     score = 0;
     setTwo()    // new tile   
 }
+
+document.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+})
+
+document.addEventListener('touchmove', (e) => {
+    if (!e.target.className.includes('tile')) {
+        return
+    }
+    e.preventDefault();
+}, { passive: false })
+
+document.addEventListener("touchend", (e) => {
+    if (!e.target.className.includes('tile')) {
+        return
+    }
+
+    let diffX = startX - e.changedTouches[0].clientX;
+    let diffY = startX - e.changedTouches[0].clientY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+            slideLeft();
+            setTwo();
+        }
+        else {
+            slideRight();
+            setTwo();
+        }
+    }
+    else {
+        if (diffY > 0) {
+            slideUp();
+            setTwo();
+        }
+        else {
+            slideDown();
+            setTwo();
+        }
+    }
+    document.getElementById("score").innerText = score;
+
+    checkWin();
+
+    // Call hasLost() to check for game over conditions
+    if (hasLost()) {
+        // Use setTimeout to delay the alert
+        setTimeout(() => {
+            alert("Game Over! You have lost the game. Game will restart");
+            restartGame();
+            alert("Click any arrow key to restart");
+            // You may want to reset the game or perform other actions when the user loses.
+        }, 100); // Adjust the delay time (in milliseconds) as needed
+
+    }
+})
