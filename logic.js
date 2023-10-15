@@ -436,7 +436,7 @@ document.addEventListener("touchend", (e) => {
     }
 
     let diffX = startX - e.changedTouches[0].clientX;
-    let diffY = startX - e.changedTouches[0].clientY;
+    let diffY = startY - e.changedTouches[0].clientY;
 
     if (Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) {
